@@ -143,10 +143,45 @@
 		text-align: center;
     }
 	  
+        .cop {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      background-color: #E0E0E0;
+      border-radius: 10px;
+	  margin-top: 10px;
+	  top: 0;
+    }
+    
+    .circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+/*      background-color: #9575CD;*/
+      margin-right: 10px;
+    }
+    
+    .text {
+      font-size: 16px;
+      font-weight: bold;
+    }
+	  body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+	  
   </style>
 </head>
 <body>
+	
   <div class="container">
+
     <button onclick="openFile()">选择文件</button>
 <!--    <button onclick="replaceText()">读取信息</button>-->
     <button onclick="downloadFile()">下载文件</button>
@@ -217,12 +252,16 @@
     <option value="4">4</option>
   </select>
 </div>
-
   </div>
 	<br><br>
     <textarea id="textInput" oninput="adjustTextareaHeight()"></textarea>
  
- 
+   <div class="cop">
+	   <a href="https://space.bilibili.com/387249845" target="_blank">
+    <img class="circle" src="https://i2.hdslb.com/bfs/face/b780424ca4838fa832dea7833e4f677b27d2a986.webp@128w_128h"/>
+    <div class="text" >Made By.冬日DongRi</div>
+		   </a>
+  </div>
   </div>
 	
 
