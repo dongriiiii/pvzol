@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+  <title>PVZOL单机版工具</title>
+	<link rel="icon" type="image/x-icon" href="https://gitee.com/bluemarkstudio/shanhai/raw/master/logo/logo_mc.png">
+
+  <style>
+    /* 居中样式 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    
+    /* 按钮和编辑框样式 */
+    .container {
+      text-align: center;
+      width: 45%;
+	  right: 50%;
+	  position: absolute;
+    }
+    
+    .container textarea {
+      padding: 10px;
+      width: 100%;
+      height: auto;
+      max-height: 45vh; /* 设置最大高度为屏幕高度的 45% */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+      resize: vertical; /* 允许垂直调整尺寸 */
+    }
+    
+    .container button {
+      padding: 10px 20px;
+      background-color: #9575CD;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .container button + button {
+      margin-top: 10px;
+    }
+
+    /* 水平滚动列表样式 */
+    .list-container {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: auto;
+		background:#EEE0CF;
+      overflow-x: auto;
+      margin-top: 2px;
+      text-align: center;
+    }
+    
+    .list-container ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      white-space: nowrap;
+    }
+    
+    .list-container li {
+      display: inline-block;
+      margin-right: 2px;
+      padding: 2px 3px;
+      border-radius: 4px;
+    }
+    
+    .list-container img {
+  width: 100px;
+  height: 142.86px;
+      margin-right: 3px;
+      vertical-align: middle;
+    }
+	  
+         .image-list {
+			position: absolute;
+			top:0;
+			left: 60%;
+			width: 40vw;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+			padding-bottom: 150px;
+        }
+
+        .image-item {
+            width: 100px;
+            height: 142.86px;
+            margin: 5px;
+            background-image: url("ui/ModuleCard_compareBg.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+	  
+    .layout-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .layout {
+      margin: 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .layout-text {
+      font-weight: bold;
+    }
+
+    .layout-input {
+      margin-top: 5px;
+      padding: 5px;
+      width: 150px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+		text-align: center;
+    }
+	  
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button onclick="openFile()">选择文件</button>
+<!--    <button onclick="replaceText()">读取信息</button>-->
+    <button onclick="downloadFile()">下载文件</button>
+  <div class="layout-container">
+<div class="layout">
+  <div class="layout-text">地图ID</div>
+  <select class="layout-input" id="mapIdSelect" onchange="updateMapId()">
+    <option value="0">黑色背景</option>
+    <option value="1">花园</option>
+    <option value="2">埃及沙漠</option>
+    <option value="3">秦始皇陵</option>
+    <option value="4">海盗湾</option>
+    <option value="5">花园(空地)</option>
+    <option value="6">黑色背景</option>
+    <option value="7">后院 (一代)</option>
+    <option value="8">农田</option>
+    <option value="9">秦始皇陵</option>
+    <option value="10">未来世界</option>
+    <option value="11">东海龙宫</option>
+  </select>
+</div>
+
+
+<div class="layout">
+  <div class="layout-text">时间</div>
+  <select class="layout-input" id="timeSelect" onchange="updateTime()">
+    <option value="day">day</option>
+    <option value="night">night</option>
+  </select>
+</div>
+
+<div class="layout">
+  <div class="layout-text">游戏模式</div>
+  <select class="layout-input" id="gameModeSelect" onchange="updateGameMode()">
+    <option value="0">普通关卡(无法游玩)</option>
+    <option value="1">锁定卡片(正常游玩推荐)</option>
+    <option value="2">传送带关卡</option>
+    <option value="3">僵尸记忆</option>
+    <option value="4">动感白菜</option>
+    <option value="5">大概是收集阳光(无法游玩)</option>
+    <option value="6">锁卡BOSS关</option>
+    <option value="7">僵尸迷阵</option>
+    <option value="8">传送带BOSS关</option>
+    <option value="9">坚果保龄球</option>
+    <option value="10">宝石迷阵</option>
+    <option value="11">？？？</option>
+    <option value="12">胡萝卜火箭</option>
+    <option value="13">？？？</option>
+    <option value="14">？？？</option>
+    <option value="15">？？？</option>
+    <option value="16">？？？</option>
+  </select>
+</div>
+
+<div class="layout">
+  <div class="layout-text">初始阳光值</div>
+  <input type="text" class="layout-input" id="initialSunInput" />
+  <button onclick="updateInitialSun()">修改</button>
+</div>
+
+<div class="layout">
+  <div class="layout-text">初始能量豆值</div>
+  <select class="layout-input" id="initialBeansSelect" onchange="updateFuelInit()">
+    <option value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  </select>
+</div>
+
+  </div>
+	<br><br>
+    <textarea id="textInput" oninput="adjustTextareaHeight()"></textarea>
+ 
+ 
+  </div>
+	
+
+
+<div class="image-list">
+    <script>
+        var imagePaths = [
+            "1100.png", "1110.png", "1200.png", "1210.png", "1300.png", "1400.png", "1500.png", "1600.png", "1700.png",
+            "1800.png", "1900.png", "2000.png", "3100.png", "3200.png", "3300.png", "3400.png", "3500.png", "3600.png",
+            "3700.png", "3900.png", "4100.png", "4200.png", "4400.png", "4500.png", "4600.png", "4700.png", "4900.png",
+            "5000.png", "5300.png", "5600.png", "5700.png", "6100.png", "6300.png", "6400.png", "6500.png", "6600.png",
+            "6700.png", "6900.png", "7100.png", "7400.png", "7600.png", "7900.png", "8000.png", "8100.png", "8200.png", "8300.png",
+            "8400.png"
+        ];
+
+        var imageList = document.getElementsByClassName("image-list")[0];
+
+        for (var i = 0; i < imagePaths.length; i++) {
+            var imagePath = "plant/" + imagePaths[i];
+            var imageItem = document.createElement("div");
+            imageItem.className = "image-item";
+            var img = document.createElement("img");
+            img.src = imagePath;
+			img.setAttribute("onclick", "addSlot('" + getSlotType(imagePaths[i]) + "')"); // 添加 onclick 事件
+            imageItem.appendChild(img);
+            imageList.appendChild(imageItem);
+        }
+		function getSlotType(imagePath) {
+            return imagePath.split(".")[0]; // 提取图片路径中的植物类型
+        }
+
+		
+function addSlot(slotType) {
+    var textarea = document.getElementById('textInput');
+    var text = textarea.value;
+
+    var slotsRegex = /<slots[^>]*>([\s\S]*?)<\/slots>/;
+    var slotsContent = text.match(slotsRegex);
+
+    if (slotsContent && slotsContent[1]) {
+      var updatedContent = addSlotToContent(slotsContent[1], slotType);
+      var updatedText = text.replace(slotsContent[0], '<slots num="' + getSlotCount(updatedContent) + '">\n' + updatedContent + '\n</slots>');
+      textarea.value = updatedText;
+      adjustTextareaHeight(); // 调整编辑框的高度
+      renderList(extractSlotAttributes(updatedContent)); // 重新渲染水平滚动列表
+    }
+  }
+
+  function addSlotToContent(slotsContent, slotType) {
+    return slotsContent + '<slot type="' + slotType + '"/>'; 
+  }
+		
+    </script>
+</div>
+  <div class="list-container">
+    <ul id="list"></ul>
+  </div>
+	
+
+ <script>
+  function adjustTextareaHeight() {
+    var textarea = document.getElementById('textInput');
+    textarea.style.height = 'auto'; // 重置高度，以便重新计算高度
+    textarea.style.height = Math.min(textarea.scrollHeight, window.innerHeight * 0.45) + 'px';
+  }
+
+  function openFile() {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.bl';
+
+    input.onchange = function(event) {
+      var file = event.target.files[0];
+      var reader = new FileReader();
+
+      reader.onload = function() {
+        var content = reader.result;
+        document.getElementById('textInput').value = content;
+        adjustTextareaHeight(); // 调整编辑框的高度
+		  replaceText();
+      };
+
+      reader.readAsText(file);
+    };
+
+    input.click();
+  }
+
+ function replaceText() {
+  var textarea = document.getElementById('textInput');
+  var text = textarea.value;
+
+  var slotsRegex = /<slots[^>]*>([\s\S]*?)<\/slots>/;
+  var slotsContent = text.match(slotsRegex);
+  var mapIdRegex = /<level.*?mapID="([^"]*)"/;
+  var stageRegex = /<stage[^>]*time="([^"]*)"/;
+  var gameTypeRegex = /<stage.*?gameType="([^"]*)"/;
+  var sunRegex = /<init.*?sun="([^"]*)"/;
+  var initRegex = /<init[^>]*fuelInit="([^"]*)"/;
+
+  var mapIdMatch = text.match(mapIdRegex);
+  var stageMatch = text.match(stageRegex);
+  var gameTypeMatch = text.match(gameTypeRegex);
+  var sunMatch = text.match(sunRegex);
+  var initMatch = text.match(initRegex);
+
+  var mapId = mapIdMatch && mapIdMatch[1] ? mapIdMatch[1] : "";
+  var time = stageMatch && stageMatch[1] ? stageMatch[1] : "";
+  var gameType = gameTypeMatch && gameTypeMatch[1] ? gameTypeMatch[1] : "";
+  var fuelInit = initMatch && initMatch[1] ? initMatch[1] : "";
+  var initialBeansInput = document.getElementById('initialBeansInput');
+
+  var mapIdSelect = document.getElementById('mapIdSelect');
+  mapIdSelect.value = mapId;
+	 
+  var timeSelect = document.getElementById("timeSelect");
+  timeSelect.value = time;
+  
+  var gameModeSelect = document.getElementById("gameModeSelect");
+  gameModeSelect.value = gameType;
+
+  var fuelInitSelect = document.getElementById('initialBeansSelect');
+  fuelInitSelect.value = fuelInit;
+
+  if (sunMatch && sunMatch[1]) {
+    initialSunInput.value = sunMatch[1];
+  }
+
+  adjustTextareaHeight(); // 调整编辑框的高度
+  
+  // 渲染水平滚动列表
+  if (slotsContent && slotsContent[1]) {
+    var slots = extractSlotAttributes(slotsContent[1]);
+    renderList(slots);
+  }
+}
+
+
+  function extractSlotAttributes(slotsContent) {
+    var slotRegex = /<slot[^>]*type="([^"]*)"/g;
+    var slots = [];
+    var match;
+
+    while ((match = slotRegex.exec(slotsContent)) !== null) {
+      slots.push(match[1]);
+    }
+
+    return slots;
+  }
+
+function renderList(slots) {
+  var list = document.getElementById('list');
+  list.innerHTML = '';
+
+  slots.forEach(function(slot) {
+    var li = document.createElement('li');
+    var div = document.createElement('div');
+    div.className = 'image-item';
+
+    var img = document.createElement('img');
+    img.src = 'plant/' + slot + '.png';
+    img.addEventListener('click', function() {
+      removeSlot(slot);
+    });
+
+    div.appendChild(img);
+    li.appendChild(div);
+    list.appendChild(li);
+  });
+}
+
+
+  function removeSlot(slotType) {
+    var textarea = document.getElementById('textInput');
+    var text = textarea.value;
+
+    var slotsRegex = /<slots[^>]*>([\s\S]*?)<\/slots>/;
+    var slotsContent = text.match(slotsRegex);
+
+    if (slotsContent && slotsContent[1]) {
+      var updatedContent = removeSlotFromContent(slotsContent[1], slotType);
+      var updatedText = text.replace(slotsContent[0], '<slots num="' + getSlotCount(updatedContent) + '">' + updatedContent + '</slots>');
+      textarea.value = updatedText;
+      adjustTextareaHeight(); // 调整编辑框的高度
+      renderList(extractSlotAttributes(updatedContent)); // 重新渲染水平滚动列表
+    }
+  }
+
+function removeSlotFromContent(slotsContent, slotType) {
+  var slotRegex = new RegExp('<slot[^>]*type="' + slotType + '"[^>]*>', 'g');
+  var updatedContent = slotsContent.replace(slotRegex, '');
+
+  return updatedContent;
+}
+
+
+  function getSlotCount(slotsContent) {
+    var slotRegex = /<slot[^>]*type="([^"]*)"/g;
+    var slotCount = 0;
+    while (slotRegex.exec(slotsContent)) {
+      slotCount++;
+    }
+    return slotCount;
+  }
+   function downloadFile() {
+  var textarea = document.getElementById('textInput');
+  var text = textarea.value;
+
+  var fileContent = text.trim(); // 移除前后空白
+
+  var blob = new Blob([fileContent], { type: 'text/plain' });
+  var url = URL.createObjectURL(blob);
+
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '1-1-1.bl';
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+function updateMapId() {
+  var select = document.getElementById('mapIdSelect');
+  var selectedValue = select.value;
+
+  var textarea = document.getElementById('textInput');
+  var text = textarea.value;
+
+  var mapIdRegex = /<level.*?mapID="([^"]*)"/;
+  var mapIdMatch = text.match(mapIdRegex);
+
+  if (mapIdMatch && mapIdMatch[1]) {
+    var updatedText = text.replace(mapIdMatch[1], selectedValue);
+    textarea.value = updatedText;
+  }
+
+  adjustTextareaHeight(); // 调整编辑框的高度
+}
+function updateTime() {
+  var timeSelect = document.getElementById('timeSelect');
+  var selectedTime = timeSelect.value;
+
+  var textarea = document.getElementById('textInput');
+  var text = textarea.value;
+
+  var stageRegex = /<stage[^>]*time="([^"]*)"/;
+  var stageMatch = text.match(stageRegex);
+  var stageTime = stageMatch && stageMatch[1] ? stageMatch[1] : "";
+
+  var updatedText = text.replace(stageTime, selectedTime);
+  textarea.value = updatedText;
+}
+
+function updateGameMode() {
+  var gameModeSelect = document.getElementById("gameModeSelect");
+  var selectedGameMode = gameModeSelect.value;
+  var textarea = document.getElementById("textInput");
+  var text = textarea.value;
+
+  var stageRegex = /<stage[^>]*gameType="([^"]*)"/;
+  var stageMatch = text.match(stageRegex);
+  var gameType = stageMatch && stageMatch[1] ? stageMatch[1] : "";
+
+  var updatedText = text.replace(stageMatch[0], stageMatch[0].replace(gameType, selectedGameMode));
+  textarea.value = updatedText;
+}
+
+	 
+	 function updateFuelInit() {
+  var fuelInitSelect = document.getElementById('initialBeansSelect');
+  var fuelInitValue = fuelInitSelect.value;
+
+  var textarea = document.getElementById('textInput');
+  var text = textarea.value;
+
+  var initRegex = /<init[^>]*fuelInit="([^"]*)"/;
+  var initMatch = text.match(initRegex);
+  var initAttributes = initMatch && initMatch[0] ? initMatch[0] : "";
+
+  var updatedInitAttributes = initAttributes.replace(/fuelInit="([^"]*)"/, 'fuelInit="' + fuelInitValue + '"');
+  var updatedText = text.replace(initAttributes, updatedInitAttributes);
+
+  textarea.value = updatedText;
+}
+
+
+function updateInitialSun() {
+  var initialSunInput = document.getElementById('initialSunInput');
+  var initialSunValue = initialSunInput.value;
+
+  var textarea = document.getElementById('textInput');
+  var text = textarea.value;
+
+  var initRegex = /<init[^>]*sun="([^"]*)"/;
+  var initMatch = text.match(initRegex);
+  var initAttributes = initMatch && initMatch[0] ? initMatch[0] : "";
+
+  var updatedInitAttributes = initAttributes.replace(/sun="([^"]*)"/, 'sun="' + initialSunValue + '"');
+  var updatedText = text.replace(initAttributes, updatedInitAttributes);
+
+  textarea.value = updatedText;
+}
+
+
+</script>
+
+
+</body>
+</html>
